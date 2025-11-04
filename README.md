@@ -1,6 +1,7 @@
 # AgentFlow
 
 > Prototype scaffolding for the AgentFlow planner and Codex CLI adapter described in the PRD.
+<img width="1237" height="887" alt="image" src="https://github.com/user-attachments/assets/c5fd8103-5e81-474c-be03-d05a2bbd39aa" />
 
 ## Problem We Are Solving
 
