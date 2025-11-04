@@ -1,7 +1,7 @@
 """
 AgentFlow viewer package.
 
-Exposes the ``run_viewer`` helper used by the CLI entrypoint.
+Expose ``run_viewer`` so the CLI can launch the Flask web UI.
 """
 
 from .server import run_viewer

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>AgentFlow Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewer.css') }}">
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js" crossorigin="anonymous"></script>
+  </head>
+  <body data-root="{{ root_directory }}">
+    <header>
+      <div>
+        <h1>AgentFlow Viewer</h1>
+        <span>Explore execution DAGs for plan artifacts</span>
+      </div>
+      <span class="status-pill status-other">Serving <span data-root-path></span></span>
+    </header>
+
+    <div class="layout">
+      <aside>
+        <input type="search" class="plan-search" placeholder="Search plans..." aria-label="Search plans">
+        <div class="plan-list"></div>
+      </aside>
+
+      <main>
+        <div>
+          <div class="status-pill status-other" data-plan-status>Loading</div>
+          <h2 data-plan-title>Loading plan...</h2>
+          <p data-plan-meta>Hang tight while we load your artifacts.</p>
+          <p data-plan-links></p>
+        </div>
+
+        <section class="summary-panel"></section>
+
+        <section class="graph-container">
+          <div class="graph-header">
+            <span data-graph-count>0 node(s)</span>
+            <span>Layout: top-to-bottom &bull; Drag to inspect &bull; Scroll to zoom</span>
+          </div>
+          <div class="empty-state">
+            <p>Choose a plan to visualize its execution DAG.</p>
+          </div>
+          <div id="graph" role="presentation"></div>
+        </section>
+
+        <section class="node-detail">
+          <h2>Select a node</h2>
+          <p>Choose a node in the graph to inspect its details.</p>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      AgentFlow Viewer &mdash; DAG visualization for plan artifacts in <code>{{ root_directory }}</code>
+    </footer>
+
+    <script src="{{ url_for('static', filename='viewer.js') }}"></script>
+  </body>
+</html>
