@@ -1,27 +1,27 @@
 # AgentFlow
 
-> Prototype scaffolding for the AgentFlow planner and Codex CLI adapter described in the PRD.
-<img width="1237" height="887" alt="image" src="https://github.com/user-attachments/assets/c5fd8103-5e81-474c-be03-d05a2bbd39aa" />
+**Teaching AI to learn how to learn — by autonomously creating its own prompt graphs.**
 
-## Problem We Are Solving
+AgentFlow rethinks agent orchestration. Instead of hand-written prompt chains, we ask the agent to draft _prompt graphs_ — directed workflows with branches, loops, and evaluation hooks. Each run becomes a rich artifact that captures source prompts, tool outputs, self-evaluations, and the synthetic graph structure that the agent just invented. Those artifacts feed a viewer, tests, and metrics that make it easier to iterate toward domain-specific agentic systems.
 
-Modern agent workflows span many steps, tools, and retries, yet most planners treat execution as a black box. Operators cannot see a persistent plan, reason about dependencies, or audit decisions after the fact. Teams end up stitching together logs, spreadsheets, and ad-hoc dashboards just to answer basic questions like “what ran?” or “why did the agent choose that tool?”
+<img width="1237" height="887" alt="AgentFlow viewer" src="https://github.com/user-attachments/assets/c5fd8103-5e81-474c-be03-d05a2bbd39aa" />
 
-## Why This Direction
+## Why AgentFlow
 
-AgentFlow fixes that visibility gap by standardizing on a canonical YAML plan that survives from planning through execution. A Codex-style CLI orchestrator executes the plan node by node, writing structured state and metrics back into the same file, while a lightweight Flask UI renders the plan as an interactive graph. This direction gives engineers:
+Modern agent workflows span tools, retries, and backtracking, yet most planners still emit linear prompt chains. That leaves operators guessing about _what_ ran and _why_. AgentFlow closes that gap by standardising on a canonical YAML artifact that survives from planning through execution while layering on:
 
-- A machine-editable plan they can diff, review, and version in git.
-- Deterministic execution with human-in-the-loop controls (pause, edit, rerun).
-- A shared contract so external runners or evaluators can plug in without reimplementing the stack.
-- Real-time observability over progress, failures, and evaluation metrics captured per node.
+- **Autonomous prompt-graph generation** – the agent itself proposes nodes, branches, and loop constructs. We persist those graphs as structured data and render them in the viewer.
+- **Run-level evaluation nodes** – self-judgement results now show up as dedicated graph nodes, so it is obvious which answers passed or failed.
+- **Explainable execution** – every node keeps prompts, responses, metrics, and timeline data so you can diff runs, audit decisions, and replay segments.
+- **AgentOps-ready observability** – the CLI, viewer, and tests work together to surface evaluation scores, usage, and synthetic graph statistics for downstream analytics.
 
-## Layout
+## Repository Layout
 
-- `src/agentflow/` - core package with configuration helpers and adapters.
-- `tests/` - unit and live tests for the Codex adapter.
+- `src/agentflow/` – core package, including the Codex CLI adapter and Flask viewer.
+- `tests/` – unit tests plus live Codex scenarios that exercise prompt-graph generation.
+- `sandbox/` – local plan artifacts written by live runs (ignored by git).
 
-## Getting Started
+## Quick Start
 
 ```bash
 python -m venv .venv
@@ -30,21 +30,67 @@ pip install --upgrade pip
 pip install -e ".[dev]"
 ```
 
-The Codex CLI must be installed globally:
+Install the Codex CLI globally and export an OpenAI key (already wired via `.env`):
 
 ```bash
-npm.cmd install -g @openai/codex
+npm install -g @openai/codex
+set OPENAI_API_KEY=sk-...
 ```
 
-Set `OPENAI_API_KEY` in `.env` (already provided). Tests automatically load it.
+## Generate a Showcase Prompt Graph
+
+Use the built-in CLI to trigger a demonstration run that produces a multi-branch DAG with evaluation nodes:
+
+```bash
+py -3 -m agentflow.cli "You are preparing a showcase AgentFlow run. Follow this exact output template:
+
+SECTION 1 - MCP Server
+Provide a ```python``` block named mcp_server with production-ready FastAPI code exposing the SQLite DB at C:\Users\stanc\github\AgentFlow\sandbox\workspace.db. Include comments for demo clarity.
+
+SECTION 2 - flow_spec JSON
+Return a ```json``` block named flow_spec. The JSON object must contain:
+- \"nodes\": array with at least 6 objects (each needs \"id\", \"label\", \"type\").
+- Include at least one node that has \"on_true\" and \"on_false\" targets.
+- Include at least one node where \"type\" is \"loop\" plus a \"max_iterations\" >= 2.
+- Include an \"edges\" array listing the control-flow connections among all nodes.
+- Ensure the JSON validates (double quotes, no trailing commas).
+
+SECTION 3 - Live test walkthrough
+Provide a numbered list detailing two iterations through the DAG, referencing branch paths and loop behavior. Use exactly two bullet points.
+
+Do not include any other prose outside these sections."
+```
+
+The CLI will emit `sandbox/agentflow-<timestamp>.yaml`. That artifact contains:
+
+- The original Codex exchange.
+- Structured `flow_spec` JSON.
+- Synthetic `flow::` nodes injected into the plan so the viewer graph shows every branch, loop, and evaluation path.
+
+## Inspect the DAG in the Viewer
+
+```bash
+py -3 -m agentflow.cli view --directory sandbox --host 127.0.0.1 --port 5050
+```
+
+The Flask viewer offers:
+
+- Sidebar search over saved plans.
+- DAG visualisation with prompt, response, and evaluation node cards.
+- Graph stats banner reporting total prompts, responses, and evaluation nodes.
+- Detailed panel for the currently selected node (raw prompt/response, evaluation score, metrics, timeline).
 
 ## Running Tests
 
-- `pytest -k unit` runs fast unit tests.
-- `pytest tests/live -m live` runs the live Codex integration test (uses real API calls).
+- `pytest -k unit` covers fast, local tests.
+- `py -3 -m pytest tests/live/test_agentflow_cli_live.py -k branches` kicks off the live scenario that asks Codex to produce a six-node graph with branching and loops. It writes a plan artifact identical to the showcase run above (requires `OPENAI_API_KEY`).
 
-## Using the CLI
+## Roadmap
 
-- `agentflow "Draft a project summary"` invokes the Codex adapter, stores the response in `agentflow-<timestamp>.yaml`, and prints the artifact path.
-- `agentflow view --host 0.0.0.0 --port 5050` launches the Flask viewer for any AgentFlow YAML files in the current directory. Without flags it listens on `127.0.0.1:5050` and serves an interactive DAG visualization with searchable plan list and node detail panels.
-- Generated YAML adheres to the plan schema from the PRD and includes metadata, timeline, usage metrics, and adapter events for auditability.
+This repository is an evolving prototype toward a full AgentOps toolkit. Near-term work includes:
+
+- richer synthetic-node attribution (surfacing tool outputs and loop counters),
+- comparative run analytics across plan artifacts,
+- and adapters beyond Codex so multiple LLM backends can propose and execute prompt graphs.
+
+Feedback, issues, and contributions are welcome! Tag your ideas with **#AgentOps** and share how you are using AgentFlow to teach agents how to learn.
