@@ -73,11 +73,7 @@ class MockAdapter:
                     {"source": "greet", "target": "end", "label": "finish"},
                 ],
             }
-            afl_text = (
-                "start();\n"
-                "greet();\n"
-                "end();\n"
-            )
+            afl_text = "start();\n" "greet();\n" "end();\n"
             message = (
                 f"Here is a simple flow for your request:\n\n"
                 f"```json flow_spec\n"
@@ -87,6 +83,7 @@ class MockAdapter:
             )
             # Embed the flow_spec in the message so the CLI can extract it
             import json
+
             message = (
                 f"Here is a simple flow for your request:\n\n"
                 f"```json\n"

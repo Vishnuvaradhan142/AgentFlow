@@ -16,14 +16,14 @@ from .workflow import handle_workflow_command
 
 if TYPE_CHECKING:  # pragma: no cover - type checking only
     from agentflow.adapters import (
+        ClaudeCLIAdapter,
+        ClaudeCLIError,
         CodexCLIAdapter,
         CodexCLIError,
         CopilotCLIAdapter,
         CopilotCLIError,
         MockAdapter,
         MockAdapterError,
-        ClaudeCLIAdapter,
-        ClaudeCLIError,
     )
     from agentflow.viewer import run_viewer
 
@@ -255,7 +255,7 @@ def print_usage() -> None:
     print(
         "Usage:\n"
         '  agentflow "<prompt text>"        Execute prompt via Codex and capture YAML artifact.\n'
-        '  agentflow workflow [options]     Run a multi-cycle self-improving workflow.\n'
+        "  agentflow workflow [options]     Run a multi-cycle self-improving workflow.\n"
         "  agentflow view [options]         Launch local viewer for AgentFlow artifacts.\n"
     )
 

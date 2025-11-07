@@ -48,14 +48,15 @@ class ClaudeCLIAdapter:
 
     def build_base_command(self) -> List[str]:
         """Construct the CLI command prior to adding the prompt."""
-        
+
         # Check if using Python wrapper script
         if self._settings.anthropic_cli_path.endswith("python.exe") or self._settings.anthropic_cli_path == "python":
             # Use the wrapper script in the repo root
             import pathlib
+
             repo_root = pathlib.Path(__file__).parent.parent.parent.parent
             wrapper_script = repo_root / "anthropic_cli_wrapper.py"
-            
+
             command = [
                 self._settings.anthropic_cli_path,
                 str(wrapper_script),
@@ -79,7 +80,7 @@ class ClaudeCLIAdapter:
                 str(self._settings.anthropic_max_tokens),
                 "--json",
             ]
-        
+
         command.extend(self._extra_args)
         return command
 
@@ -100,9 +101,7 @@ class ClaudeCLIAdapter:
         """
 
         if not (self._settings.anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY")):
-            raise ClaudeCLIError(
-                "ANTHROPIC_API_KEY must be set in the environment or Settings for Claude adapter."
-            )
+            raise ClaudeCLIError("ANTHROPIC_API_KEY must be set in the environment or Settings for Claude adapter.")
 
         env = os.environ.copy()
         # Only set if provided to avoid overriding an already-exported value
@@ -122,9 +121,7 @@ class ClaudeCLIAdapter:
         )
 
         if completed.returncode != 0:
-            raise ClaudeCLIError(
-                f"Anthropic CLI exited with {completed.returncode}: {completed.stderr.strip()}"
-            )
+            raise ClaudeCLIError(f"Anthropic CLI exited with {completed.returncode}: {completed.stderr.strip()}")
 
         stdout = (completed.stdout or "").strip()
         if not stdout:

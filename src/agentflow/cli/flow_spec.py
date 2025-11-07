@@ -186,4 +186,3 @@ def build_flow_nodes(
         )
 
     return synthetic_nodes
-

@@ -4,7 +4,6 @@ import pytest
 
 from agentflow.adapters import GeminiCLIAdapter
 
-
 pytestmark = pytest.mark.live
 
 

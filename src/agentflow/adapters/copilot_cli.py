@@ -97,9 +97,7 @@ class CopilotCLIAdapter:
         )
 
         if completed.returncode != 0:
-            raise CopilotCLIError(
-                f"Copilot CLI exited with {completed.returncode}: {completed.stderr.strip()}"
-            )
+            raise CopilotCLIError(f"Copilot CLI exited with {completed.returncode}: {completed.stderr.strip()}")
 
         events: List[Dict] = []
         message_text: Optional[str] = None

@@ -148,4 +148,3 @@ def build_metrics(usage: Dict[str, Any], evaluation_payload: Optional[Dict[str, 
         if error:
             metrics["evaluation_error"] = error
     return metrics
-

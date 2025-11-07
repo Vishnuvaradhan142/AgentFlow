@@ -27,9 +27,7 @@ def make_completed_process(stdout_lines, returncode=0, stderr=""):
 def test_copilot_adapter_parses_agent_message(monkeypatch, settings):
     event_lines = [
         json.dumps({"type": "thread.started", "thread_id": "abc"}),
-        json.dumps(
-            {"type": "item.completed", "item": {"type": "assistant_message", "text": "Hi from Copilot!"}}
-        ),
+        json.dumps({"type": "item.completed", "item": {"type": "assistant_message", "text": "Hi from Copilot!"}}),
         json.dumps({"type": "turn.completed", "usage": {"output_tokens": 7}}),
     ]
     spy = SpyRun(make_completed_process(event_lines))

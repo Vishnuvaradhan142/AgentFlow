@@ -78,9 +78,7 @@ class CodexCLIAdapter:
         """
 
         if not (self._settings.openai_api_key or os.environ.get("OPENAI_API_KEY")):
-            raise CodexCLIError(
-                "OPENAI_API_KEY must be set in the environment or Settings for Codex adapter."
-            )
+            raise CodexCLIError("OPENAI_API_KEY must be set in the environment or Settings for Codex adapter.")
 
         env = os.environ.copy()
         if self._settings.openai_api_key:
@@ -100,9 +98,7 @@ class CodexCLIAdapter:
         )
 
         if completed.returncode != 0:
-            raise CodexCLIError(
-                f"Codex CLI exited with {completed.returncode}: {completed.stderr.strip()}"
-            )
+            raise CodexCLIError(f"Codex CLI exited with {completed.returncode}: {completed.stderr.strip()}")
 
         events: List[Dict] = []
         message_text: Optional[str] = None

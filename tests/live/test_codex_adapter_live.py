@@ -4,7 +4,6 @@ import pytest
 
 from agentflow.adapters import CodexCLIAdapter
 
-
 pytestmark = pytest.mark.live
 
 

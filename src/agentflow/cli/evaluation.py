@@ -141,4 +141,3 @@ def parse_plaintext_evaluation(message: str) -> Optional[Dict[str, Any]]:
 
     justification = " ".join(justification_parts).strip() or None
     return {"score": score, "justification": justification}
-

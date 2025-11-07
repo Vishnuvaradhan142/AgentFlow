@@ -30,9 +30,7 @@ def test_codex_adapter_parses_agent_message(monkeypatch, settings):
     settings = Settings(openai_api_key="test-key")
     event_lines = [
         json.dumps({"type": "thread.started", "thread_id": "abc"}),
-        json.dumps(
-            {"type": "item.completed", "item": {"type": "agent_message", "text": "Hello world!"}}
-        ),
+        json.dumps({"type": "item.completed", "item": {"type": "agent_message", "text": "Hello world!"}}),
         json.dumps({"type": "turn.completed", "usage": {"output_tokens": 42}}),
     ]
     spy = SpyRun(make_completed_process(event_lines))

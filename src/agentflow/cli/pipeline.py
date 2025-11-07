@@ -277,4 +277,3 @@ def build_prompt_pipeline(adapter: CodexCLIAdapter):
     graph.add_edge("build_plan", END)
 
     return graph.compile()
-

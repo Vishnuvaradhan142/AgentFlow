@@ -1,6 +1,6 @@
 import yaml
 
-from agentflow.adapters.codex_cli import CodexResult, CodexCLIError
+from agentflow.adapters.codex_cli import CodexCLIError, CodexResult
 from agentflow.cli import main as agentflow_main
 from agentflow.config import Settings
 
@@ -67,7 +67,9 @@ def test_main_writes_failed_artifact(monkeypatch, tmp_path):
     monkeypatch.setattr("agentflow.cli.Settings.from_env", lambda: settings)
     # Mock the adapter resolver to return FailingAdapter
     failing_adapter_instance = FailingAdapter(settings)
-    monkeypatch.setattr("agentflow.cli.entry._resolve_adapter", lambda name: (lambda s: failing_adapter_instance, CodexCLIError))
+    monkeypatch.setattr(
+        "agentflow.cli.entry._resolve_adapter", lambda name: (lambda s: failing_adapter_instance, CodexCLIError)
+    )
 
     exit_code = agentflow_main(["Do the thing"])
     assert exit_code == 1

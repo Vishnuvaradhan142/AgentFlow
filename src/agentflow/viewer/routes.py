@@ -226,7 +226,11 @@ def _plan_detail_payload(artifact: PlanArtifact) -> Dict[str, Any]:
 
         response_id = f"{node_id}::response"
         response_summary = _truncate(
-            response_text.replace("\n", " ") if response_text else (outputs.get("synopsis") or node.get("summary") or "Response"),
+            (
+                response_text.replace("\n", " ")
+                if response_text
+                else (outputs.get("synopsis") or node.get("summary") or "Response")
+            ),
             limit=90,
         )
         score_value = evaluation.get("score")
@@ -268,7 +272,9 @@ def _plan_detail_payload(artifact: PlanArtifact) -> Dict[str, Any]:
         }
         response_count += 1
 
-        show_evaluation = evaluation.get("score") is not None or evaluation.get("justification") or evaluation.get("raw_message")
+        show_evaluation = (
+            evaluation.get("score") is not None or evaluation.get("justification") or evaluation.get("raw_message")
+        )
         if show_evaluation:
             evaluation_id = f"{node_id}::evaluation"
             justification = evaluation.get("justification") or ""
@@ -457,13 +463,3 @@ def _evaluation_css_class(score: Optional[float]) -> str:
     if normalized >= 0:
         return "score-low"
     return "score-unknown"
-
-
-
-
-
-
-
-
-
-
