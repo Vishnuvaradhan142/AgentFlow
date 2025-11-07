@@ -47,7 +47,8 @@ def test_codex_adapter_parses_agent_message(monkeypatch, settings):
     assert len(spy.calls) == 1
     command = spy.calls[0]
     assert command[:3] == [settings.codex_cli_path, "exec", "--model"]
-    assert command[-1] == "-"
+    # Prompt is now passed as the last argument instead of via stdin
+    assert command[-1] == "Say hello."
 
 
 def test_codex_adapter_raises_on_failure(monkeypatch, settings):

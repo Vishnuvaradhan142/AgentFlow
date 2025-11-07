@@ -24,6 +24,13 @@ env/
 .coverage
 coverage.xml
 htmlcov/
+.tox/
+*.cover
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+test-results/
+junit.xml
 
 # Type checking / caches
 .mypy_cache/
@@ -50,4 +57,11 @@ sandbox/*.yml
 # OS files
 .DS_Store
 Thumbs.db
+
+# CI/CD artifacts
+bandit-report.json
+safety-report.json
+*.log
+
+# Agentflow artifacts
 **agentflow**.yaml

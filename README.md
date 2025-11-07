@@ -1,5 +1,9 @@
 # AgentFlow
 
+[![CI](https://github.com/stancsz/AgentFlow/workflows/CI/badge.svg)](https://github.com/stancsz/AgentFlow/actions)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 **Teaching AI to learn how to learn — by autonomously creating its own LangGraphs.**
 
 AgentFlow rethinks agent orchestration. Instead of hand-written prompt chains, we ask the agent to draft _LangGraphs_ — directed workflows with branches, loops, and evaluation hooks. Each run becomes a rich artifact that captures source prompts, tool outputs, self-evaluations, and the synthetic graph structure that the agent just invented. Those artifacts feed a viewer, tests, and metrics that make it easier to iterate toward domain-specific agentic systems.
@@ -142,6 +146,25 @@ The Flask viewer offers:
 
 ## Running Tests
 
+### Quick Test Run
+```bash
+# Run unit tests
+pytest tests/unit -v
+
+# Run with coverage
+pytest tests/unit --cov=src/agentflow --cov-report=term-missing
+```
+
+### Full CI Check (Local)
+```bash
+# Windows
+.\scripts\ci-check.ps1
+
+# Unix/Linux/macOS
+./scripts/ci-check.sh
+```
+
+### Specific Test Types
 - `pytest -k unit` covers fast, local tests.
 - `py -3 -m pytest tests/live/test_agentflow_cli_live.py -k branches` kicks off the live scenario that asks Codex to produce a six-node graph with branching and loops. It writes a plan artifact identical to the showcase run above (requires `OPENAI_API_KEY`).
 
@@ -150,6 +173,41 @@ For Claude live smoke test:
 ```
 py -3 -m pytest tests/live/test_claude_adapter_live.py -m live
 ```
+
+## Development
+
+### Code Quality Tools
+
+AgentFlow uses automated code quality checks:
+
+```bash
+# Format code with Black
+black src/ tests/
+
+# Sort imports
+isort src/ tests/
+
+# Lint with flake8
+flake8 src/ tests/
+
+# Type check with mypy
+mypy src/agentflow --ignore-missing-imports
+```
+
+### CI/CD Pipeline
+
+- **Continuous Integration**: Automated testing on every push and PR
+- **Multi-platform**: Tests run on Ubuntu, Windows, and macOS
+- **Python versions**: 3.10, 3.11, 3.12
+- **Code quality**: Black, isort, flake8, mypy
+- **Security**: Bandit, Safety dependency scanning
+- **Coverage**: Codecov integration
+
+See [.github/CI_CD_GUIDE.md](.github/CI_CD_GUIDE.md) for detailed CI/CD documentation.
+
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ## Roadmap
 
